@@ -7,8 +7,15 @@ require 'tty-spinner'
 Viewer.header
 
 Search.create if Search.count == 0
-Search.first.update(radius: 1000.0) unless Search.first.radius
+Search.first.update(radius: 5000.0) if !Search.first.radius || Search.first.radius == 0.0
 search_radius = Search.first.radius
+
+def set_search_radius(radius)
+    Search.first.update(radius: radius)
+    # search_radius = Search.first.radius
+end
+
+# binding.pry
 
 options = ["Eat and Drink","Going Out-Entertainment","Sights and Museums","Natural and Geographical","Transport","Accommodations","Leisure and Outdoor","Shopping","Business and Services","Facilities","Areas and Buildings"]
 use_previous_data = false
@@ -31,15 +38,17 @@ else
 #     units = Viewer.prompt.select("Meters or feet?\n", ["Of course meters, comerade, why you to ask me?", "Probably feet partner, we're in US, right?"])
 #     units == "Probably feet partner, we're in US, right?" ? search_radius *= 0.3048 : search_radius
 
-    $search_radius = Viewer.prompt.ask("Great, you've select #{category}, how far should I look?").to_f
+    # $search_radius
+    set_search_radius(Viewer.prompt.ask("Great, you've select #{category}, how far should I look?").to_f)
+    search_radius = Search.first.radius
     begin
-        1000 / search_radius
-        $search_radius < 0 ? $search_radius = 0-$search_radius : $search_radius
-        units = Viewer.prompt.select("#{$search_radius} Meters or feet?\n", ["Of course meters, comerade, why you to ask me?", "Probably feet partner, we're in US, right?"])
-        units == "Probably feet partner, we're in US, right?" ? $search_radius *= 0.3048 : $search_radius
+        5000 / search_radius
+        search_radius < 0 ? set_search_radius(0 - search_radius) : search_radius
+        units = Viewer.prompt.select("#{search_radius} Meters or feet?\n", ["Of course meters, comerade, why you to ask me?", "Probably feet partner, we're in US, right?"])
+        units == "Probably feet partner, we're in US, right?" ? search_radius *= 0.3048 : search_radius
     rescue
-        puts "I didn't undersand you, so I set 1000 meters"
-        $search_radius = 1000
+        puts "I didn't undersand you, so I set 5000 meters"
+        set_search_radius(5000)
     end
 
     Viewer.header
@@ -126,7 +135,8 @@ t = TTY::Table.new table
 box = TTY::Box.frame t.render(:ascii, align: :center ), align: :center, title: {top_left: "Here are the top 10 results:", bottom_right: 'v1.0'}, style: {fg: :bright_yellow, bg: :blue, border: { fg: :bright_yellow, bg: :blue}}
 Viewer.header
 
-puts search_radius
+# puts Search.first.radius
+# puts search_radius
 puts box
 
 

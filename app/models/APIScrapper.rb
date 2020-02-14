@@ -1,3 +1,4 @@
+require 'pry'
 
 class APIScrapper
 
@@ -94,7 +95,7 @@ class APIScrapper
             }
         else
             result = result[0]
-            @@address =  result[0]["Location"]["Address"]["Label"]
+            @@address =  result["Location"]["Address"]["Label"]
         end
         @@coordinates = {lat: result["Location"]["DisplayPosition"]["Latitude"], lon: result["Location"]["DisplayPosition"]["Longitude"]}
         
