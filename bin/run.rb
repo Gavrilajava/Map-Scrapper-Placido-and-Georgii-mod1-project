@@ -26,9 +26,22 @@ else
     if Viewer.prompt.yes?("Would you like to type an address?")
        APIScrapper.geocode(Viewer.prompt.ask("Please type at least a street and city"))
     end
-    search_radius = Viewer.prompt.ask("Great, you've select #{category}, how far should I look?").to_f
-    units = Viewer.prompt.select("Meters or feet?\n", ["Of course meters, comerade, why you to ask me?", "Probably feet partner, we're in US, right?"])
-    units == "Probably feet partner, we're in US, right?" ? search_radius *= 0.3048 : search_radius
+  
+#     search_radius = Viewer.prompt.ask("Great, you've select #{category}, how far should I look?").to_f
+#     units = Viewer.prompt.select("Meters or feet?\n", ["Of course meters, comerade, why you to ask me?", "Probably feet partner, we're in US, right?"])
+#     units == "Probably feet partner, we're in US, right?" ? search_radius *= 0.3048 : search_radius
+
+    $search_radius = Viewer.prompt.ask("Great, you've select #{category}, how far should I look?").to_f
+    begin
+        1000 / search_radius
+        $search_radius < 0 ? $search_radius = 0-$search_radius : $search_radius
+        units = Viewer.prompt.select("#{$search_radius} Meters or feet?\n", ["Of course meters, comerade, why you to ask me?", "Probably feet partner, we're in US, right?"])
+        units == "Probably feet partner, we're in US, right?" ? $search_radius *= 0.3048 : $search_radius
+    rescue
+        puts "I didn't undersand you, so I set 1000 meters"
+        $search_radius = 1000
+    end
+
     Viewer.header
     APIScrapper.get_data(category, search_radius)
 

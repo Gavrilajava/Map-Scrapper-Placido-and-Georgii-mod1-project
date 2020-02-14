@@ -17,11 +17,12 @@ class APIScrapper
         Page.destroy_all
         Match.destroy_all
         Keyword.destroy_all
-        if @@coordinates = {}
+        if !@@coordinates == {}
             remote_ip = open('http://whatismyip.akamai.com').read
             @@coordinates = Geokit::Geocoders::MultiGeocoder.geocode(remote_ip)
+            @@coordinates = {:lat =>  @@coordinates.lat, :lon => @@coordinates.lng}
         end
-        url = "#{@@base_url}in=#{@@coordinates.lat},#{@@coordinates.lng};r=#{distance}&q=#{what}&#{@@api_key}"
+        url = "#{@@base_url}in=#{@@coordinates[:lat]},#{@@coordinates[:lon]};r=#{distance}&q=#{what}&#{@@api_key}"
         result = JSON.parse(open(url).read)["results"]
         APIScrapper.create_places(result) 
         while result.has_key?("next") do 
@@ -98,6 +99,10 @@ class APIScrapper
         @@coordinates = {lat: result["Location"]["DisplayPosition"]["Latitude"], lon: result["Location"]["DisplayPosition"]["Longitude"]}
         
         # "#{result["Location"]["DisplayPosition"]["Latitude"]},#{result["Location"]["DisplayPosition"]["Longitude"]}"
+    end
+
+    def self.coordinates
+        @@coordinates
     end
 
 end

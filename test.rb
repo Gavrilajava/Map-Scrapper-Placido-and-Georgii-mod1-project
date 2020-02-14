@@ -1,4 +1,5 @@
 require_relative './config/environment'
 
-puts APIScrapper.geocode("pulkovskoe")
+APIScrapper.geocode ("Altayskaya Saint petersburg")
 
+puts "#{APIScrapper.coordinates[:lat]},#{APIScrapper.coordinates[:lon]}"
