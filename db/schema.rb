@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_13_152206) do
+ActiveRecord::Schema.define(version: 2020_02_14_153009) do
 
   create_table "keywords", force: :cascade do |t|
     t.string "keyword"
@@ -40,6 +40,10 @@ ActiveRecord::Schema.define(version: 2020_02_13_152206) do
     t.string "category"
     t.string "address"
     t.string "website"
+  end
+
+  create_table "searches", force: :cascade do |t|
+    t.float "radius"
   end
 
   create_table "tags", force: :cascade do |t|

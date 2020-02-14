@@ -1,5 +1,3 @@
-
-
 class Place < ActiveRecord::Base
     has_many :place_tag_joiners
     has_many :tags, through: :place_tag_joiners
@@ -16,7 +14,8 @@ class Place < ActiveRecord::Base
     end
 
     def distance_relevance_multiplier
-        1.0 - ((self.distance) ** 2 / (2.0 * ($search_radius ** 2)))
+        search_radius = Search.first.radius
+        1.0 - ((self.distance) ** 2 / (2.0 * (search_radius ** 2)))
     end
 
     def relevance
