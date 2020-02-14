@@ -1,5 +1,7 @@
 require_relative './config/environment'
 
-APIScrapper.geocode ("Altayskaya Saint petersburg")
 
-puts "#{APIScrapper.coordinates[:lat]},#{APIScrapper.coordinates[:lon]}"
+
+Place.where(name:  "Beer Nation").each do |place|
+    pp place
+end
